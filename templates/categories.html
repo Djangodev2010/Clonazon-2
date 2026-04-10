@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark">Explore Our Categories</h2>
+        <p class="text-muted">Discover our wide range of high-quality products curated just for you.</p>
+        <hr class="mx-auto" style="width: 50px; height: 3px; background-color: #0d6efd;">
+    </div>
+
+    <div class="row g-4">
+        {% for category in categories %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <a href='{% url "filter_by_category" slug=category.slug %}' class="text-decoration-none text-dark">
+                <div class="card h-100 border-0 shadow-sm category-card" style="transition: transform 0.3s ease; border-radius: 15px; overflow: hidden;">
+                    
+                    <div class="d-flex justify-content-center align-items-center bg-light" style="height: 180px;">
+                        {% if category.picture %}
+                            <img src="{{ category.picture.url }}" 
+                                 alt="{{ category.name }}" 
+                                 style="max-height: 120px; width: auto; object-fit: contain;">
+                        {% else %}
+                            <i class="bi bi-box-seam display-1 text-secondary"></i>
+                        {% endif %}
+                    </div>
+
+                    <div class="card-body text-center bg-white">
+                        <h5 class="card-title fw-bold mb-0">{{ category.name }}</h5>
+                        <small class="text-primary">View Products &rarr;</small>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h4 class="text-muted">We're currently updating our categories. Check back soon!</h4>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    /* Adding that gentle hover lift we talked about! */
+    .category-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.12) !important;
+    }
+</style>
+{% endblock %}
