@@ -32,7 +32,7 @@
     <div class="bg-white py-5">
         <div class="container">
             <h3 class="mb-4 text-center">
-                <a style="text-decoration:none; color:black;" href="#">🔥 Trending Now</a>
+                <a style="text-decoration:none; color:black;" href='{% url "trending_products" %}'>🔥 Trending Now</a>
             </h3>
             <div class="row g-4">
                 {% for trending_product in trending_products %}
@@ -46,7 +46,7 @@
                                 {{trending_product.name}}
                             </h6>
                             <p class="text-success fw-bold">₹{{trending_product.price}}</p>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Quick View</a>
+                            <a href='{% url "product_detail" trending_product.id %}' class="btn btn-sm btn-outline-primary">Quick View</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -57,7 +57,7 @@
     <div class="bg-white py-5">
         <div class="container">
             <h3 class="mb-4 text-center">
-                <a style="text-decoration:none; color:black;" href="#">Latest Products</a>
+                <a style="text-decoration:none; color:black;" href='{% url "latest_products" %}'>Latest Products</a>
             </h3>
             <div class="row g-4">
                 {% for latest_product in latest_products %} <div class="col-12 col-sm-6 col-md-3">
@@ -70,7 +70,7 @@
                                 {{latest_product.name}}
                             </h6>
                             <p class="text-success fw-bold">₹{{latest_product.price}}</p>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Quick View</a>
+                            <a href='{% url "product_detail" latest_product.id %}' class="btn btn-sm btn-outline-primary">Quick View</a>
                         </div>
                     </div>
                 {% endfor %}

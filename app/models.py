@@ -27,6 +27,7 @@ class Product(models.Model):
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
     slug = models.SlugField(max_length=355)
     discount = models.PositiveIntegerField(default=0)
+    free_delivery = models.BooleanField(default=False)
     is_trending = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -44,12 +45,12 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, unique=True)
     price = models.PositiveBigIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return self.product.name + ': ' + str(self.quantity)
+        return self.product.name
 
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
