@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<div class="container dashboard-container">
+    <div class="row">
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm p-3">
+                <div class="text-center mb-4">
+                    <img src="https://ui-avatars.com/api/?name=User&background=random&size=100" class="rounded-circle mb-3" alt="Profile">
+                    <h5 class="fw-bold mb-0">My Account</h5>
+                    <small class="text-muted">Member since {{user.created_at | date}}</small>
+                </div>
+                <hr>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <button class="nav-link active mb-2" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab">
+                        <i class="bi bi-person-circle me-2"></i> Edit Profile
+                    </button>
+                    <button class="nav-link mb-2" id="v-pills-cart-tab" data-bs-toggle="pill" data-bs-target="#v-pills-cart" type="button" role="tab">
+                        <i class="bi bi-cart3 me-2"></i> My Cart
+                    </button>
+                    <button class="nav-link mb-2" id="v-pills-wishlist-tab" data-bs-toggle="pill" data-bs-target="#v-pills-wishlist" type="button" role="tab">
+                        <i class="bi bi-heart me-2"></i> Wishlist
+                    </button>
+                    <button class="nav-link text-danger" type="button">
+                        <i class="bi bi-box-arrow-right me-2"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="tab-content mt-1" id="v-pills-tabContent">
+                
+                <div class="tab-pane fade show active" id="v-pills-profile" role="tabpanel">
+                    <div class="card shadow-sm p-4">
+                        <h4 class="fw-bold mb-4">Account Settings</h4>
+                        <form>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Username</label>
+                                    <input type="text" class="form-control" value="{{user.username}}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control" value="{{user.email}}">
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <h6 class="text-primary fw-bold">Change Password</h6>
+                                    <hr>
+                                </div>
+                                <form>
+                                    <div class="col-md-6">
+                                        <label class="form-label">New Password</label>
+                                        <input type="password" class="form-control" placeholder="Leave blank to keep current">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Confirm New Password</label>
+                                        <input type="password" class="form-control" placeholder="Confirm new password">
+                                    </div>
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                                        <button type="reset" class="btn btn-outline-secondary ms-2">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="v-pills-cart" role="tabpanel">
+                    <div class="card shadow-sm p-4">
+                        <h4 class="fw-bold mb-4">Items in Your Cart</h4>
+                        <ul class="list-group list-group-flush" id="cart-items-container">
+                            {% include "partials/product_partial.html" %}
+                        </ul>
+
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="v-pills-wishlist" role="tabpanel">
+                    <div class="card shadow-sm p-4">
+                        <h4 class="fw-bold mb-4">Your Wishlist</h4>
+                        <p class="text-muted">You have no items in your wishlist yet.</p>
+                        <a href="http://127.0.0.1:8000/" class="btn btn-outline-primary btn-sm w-25">Start Shopping</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+
+{% endif %}

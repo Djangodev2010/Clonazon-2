@@ -1,0 +1,53 @@
+<li class="list-group-item px-0 py-3">
+    <div class="row align-items-center">
+        {% for cart_item in cart_items %}
+            <div class="col-3 col-md-2">
+                <div class="cart-img-container">
+                    <img src="{{cart_item.product.image.url}}" alt="{{cart_item.product.name}}" class="img-fluid">
+                </div>
+            </div>
+            <div class="col-5 col-md-6">
+                <h6 class="fw-bold mb-1">{{cart_item.product.name}}</h6>
+                <div class="d-flex align-items-center mb-2">
+                    <span class="text-muted me-2 small">Qty:</span>
+                    <div class="input-group input-group-sm w-50">
+                        <form 
+                            hx-post="{% url 'reduce_quantity' cart_item.id %}"
+                            hx-target="#cart-items-container"
+                            hx-swap="innerHTML"
+                        >
+                        {% csrf_token %}
+                            <button class="btn btn-outline-secondary py-0 px-2" type="submit">-</button>
+                        </form>
+                        
+                        <input type="text" class="form-control text-center bg-white" style="max-width: 40px;" value="{{cart_item.quantity}}" readonly>
+                        <form 
+                            hx-post="{% url 'increase_quantity' cart_item.id %}"
+                            hx-target="#cart-items-container"
+                            hx-swap="innerHTML"
+                        >
+                        {% csrf_token %}
+                            <button class="btn btn-outline-secondary py-0 px-2" type="submit">+</button>
+                        </form>
+                    </div>
+                </div>
+                <form 
+                    hx-post="{% url 'remove_cart_item' cart_item.id %}"
+                    hx-target="#cart-items-container"
+                    hx-swap="innerHTML"
+                >
+                {% csrf_token %}
+                    <button class="btn btn-link btn-sm text-danger p-0 text-decoration-none" style="font-size: 0.8rem;">Remove</button>
+                </form>
+            </div>
+            <div class="col-4 col-md-4 text-end">
+                <span class="fw-bold fs-5">₹{{cart_item.product.price}}</span>
+            </div>
+        {% endfor %}
+    </div>
+</li>
+
+<div class="mt-4 pt-3 border-top text-end">
+    <h5 class="mb-3">Total: <span id="cart-total" class="fw-bold text-primary">₹{{ total_price }}</span></h5>
+    <a href="#" class="btn btn-warning btn-lg fw-bold px-4">Proceed to Checkout</a>
+</div>

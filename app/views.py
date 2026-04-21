@@ -8,20 +8,27 @@ from django.http import HttpResponse
 
 def index(request):
     latest_products = Product.objects.all().order_by('-created_at')[:4]
-
-    cart = Cart.objects.get(user=request.user)
-
-    cart_products = CartItem.objects.filter(cart=cart)[:3]
-
     trending_products = Product.objects.filter(is_trending=True)[:4]
-    for t in trending_products:
-        print(t.image.url)
+
+    try:
+        cart = Cart.objects.get(user=request.user)
+        cart_products = CartItem.objects.filter(cart=cart)[:3]
+
+        context = {
+            'cart_products': cart_products,
+            'trending_products': trending_products,
+            'latest_products': latest_products,
+        }
+        return render(request, 'index.html', context=context)
+    except Exception as e:
+        print("YES")
 
     context = {
-        'cart_products': cart_products,
         'trending_products': trending_products,
         'latest_products': latest_products,
     }
+    print(context)
+
     return render(request, 'index.html', context=context)
 
 def categories(request):
@@ -111,3 +118,75 @@ def add_to_cart(request, id):
         }
         return render(request, 'partials/add_to_cart_form_partial.html', context=context)
         
+def profile(request, id):
+    user = get_object_or_404(User, id=id)
+    cart = get_object_or_404(Cart, user=user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    for cart_item in cart_items:
+        total_price += cart_item.price * cart_item.quantity
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price
+    }
+    return render(request, 'profile.html', context=context)
+
+def reduce_quantity(request, id):
+    cart_item = get_object_or_404(CartItem, id=id)
+    cart_item.quantity -= 1
+    if cart_item.quantity == 0:
+        cart_item.delete()
+    else:
+        cart_item.save()
+    user = User.objects.get(id=request.user.id)
+    cart = get_object_or_404(Cart, user=user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    for cart_item in cart_items:
+        total_price += cart_item.price * cart_item.quantity
+    print(total_price)
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price
+    }
+    if request.headers.get('HX-Request') == 'true':
+        return render(request, 'partials/product_partial.html', context=context)
+    return render(request, 'profile.html', context=context)
+
+def increase_quantity(request, id):
+    cart_item = get_object_or_404(CartItem, id=id)
+    cart_item.quantity += 1
+    if cart_item.quantity == 0:
+        cart_item.delete()
+    else:
+        cart_item.save()
+    user = User.objects.get(id=request.user.id)
+    cart = get_object_or_404(Cart, user=user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    for cart_item in cart_items:
+        total_price += cart_item.price * cart_item.quantity
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price
+    }
+    if request.headers.get('HX-Request') == 'true':
+        return render(request, 'partials/product_partial.html', context=context)
+    return render(request, 'profile.html', context=context)
+
+def remove_cart_item(request, id):
+    cart_item = CartItem.objects.get(id=id)
+    cart_item.delete()
+    user = User.objects.get(id=request.user.id)
+    cart = get_object_or_404(Cart, user=user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    for cart_item in cart_items:
+        total_price += cart_item.price * cart_item.quantity
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price
+    }
+    if request.headers.get('HX-Request') == 'true':
+        return render(request, 'partials/product_partial.html', context=context)
+    return render(request, 'profile.html', context=context)
