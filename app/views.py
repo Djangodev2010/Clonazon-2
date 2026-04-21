@@ -150,7 +150,7 @@ def reduce_quantity(request, id):
         'total_price': total_price
     }
     if request.headers.get('HX-Request') == 'true':
-        return render(request, 'partials/product_partial.html', context=context)
+        return render(request, 'partials/cart_product_partial.html', context=context)
     return render(request, 'profile.html', context=context)
 
 def increase_quantity(request, id):
@@ -171,7 +171,7 @@ def increase_quantity(request, id):
         'total_price': total_price
     }
     if request.headers.get('HX-Request') == 'true':
-        return render(request, 'partials/product_partial.html', context=context)
+        return render(request, 'partials/cart_product_partial.html', context=context)
     return render(request, 'profile.html', context=context)
 
 def remove_cart_item(request, id):
@@ -188,5 +188,5 @@ def remove_cart_item(request, id):
         'total_price': total_price
     }
     if request.headers.get('HX-Request') == 'true':
-        return render(request, 'partials/product_partial.html', context=context)
+        return render(request, 'partials/cart_product_partial.html', context=context)
     return render(request, 'profile.html', context=context)
