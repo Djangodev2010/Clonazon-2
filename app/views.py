@@ -87,37 +87,25 @@ def trending_products(request):
 
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug)
-    discount = 0
-    if product.discount:
-        discount = product.discount
-    discounted_price = int(product.price - product.price * product.discount / 100)
+    discount = product.discount if product.discount else 0
+    discounted_price = int(product.price - product.price * discount / 100)
     comments = Comment.objects.filter(product=product)
-    if request.user.is_authenticated:
-        cart = Cart.objects.get(user=request.user)
-        is_cart_item = False
-        if CartItem.objects.filter(cart=cart, product=product).exists():
-            is_cart_item = True
-        else:
-            is_cart_item = False
-        context = {
-            'product': product,
-            'discount': discount,
-            'discounted_price': discounted_price,
-            'comments': comments,
-            'stars': list(range(5)),
-            'is_cart_item': is_cart_item
-        }
-        return render(request, 'product_detail.html', context=context)
     
-    else:
-        context = {
-                'product': product,
-                'discount': discount,
-                'discounted_price': discounted_price,
-                'comments': comments,
-                'stars': list(range(5)),
-            }
-        return render(request, 'product_detail.html', context=context)
+    is_cart_item = False
+    if request.user.is_authenticated:
+        # Using filter().first() is a bit safer than .get() to avoid errors
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            is_cart_item = CartItem.objects.filter(cart=cart, product=product).exists()
+
+    context = {
+        'product': product,
+        'discount': discount,
+        'discounted_price': discounted_price,
+        'comments': comments,
+        'stars': list(range(5)),
+    }
+    return render(request, 'product_detail.html', context)
 
 def add_to_cart(request, slug):
     cart = get_object_or_404(Cart, user=request.user)
