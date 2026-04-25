@@ -30,6 +30,40 @@
             .form-label { font-weight: 600; color: #495057; }
             .cart-img-container { background-color: #f8f9fa; border-radius: 8px; padding: 10px; text-align: center; }
             .cart-img-container img { max-height: 80px; object-fit: contain; }
+            .product-img-container {
+                background-color: #f8f9fa;
+                border-radius: 15px;
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 500px;
+            }
+            .nav-tabs .nav-link { color: #495057; border: none; border-bottom: 3px solid transparent; }
+            .nav-tabs .nav-link.active { color: #0d6efd; border: none; border-bottom: 3px solid #0d6efd; font-weight: bold; }
+            .spec-label { width: 30%; font-weight: 600; color: #6c757d; }
+            .comment-avatar { width: 48px; height: 48px; border-radius: 50%; background: #e9ecef; }
+
+            @media (max-width: 576px) {
+                .nav-tabs {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    overflow-x: auto;
+                    overflow-y: hidden;
+                    white-space: nowrap;
+                    -webkit-overflow-scrolling: touch;
+                    border-bottom: 1px solid #dee2e6;
+                }
+
+                .nav-tabs .nav-item {
+                    flex: 0 0 auto; /* Prevents tabs from shrinking */
+                }
+
+                /* Hide the scrollbar for a cleaner look while keeping it functional */
+                .nav-tabs::-webkit-scrollbar {
+                    display: none;
+                }
+            }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
 </head>
@@ -55,7 +89,7 @@
                     {% if user.is_authenticated %}
                         <a class="nav-link" href='{% url "profile" user.id %}'>Profile</a>
                     {% else %}
-                        <a class="nav-link" href='#'>Login</a>
+                        <a class="nav-link" href='{% url "login" %}'>Login</a>
                     {% endif %}
                 </div>
             </div>

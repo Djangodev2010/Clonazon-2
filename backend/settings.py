@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'app'
+    'app',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -124,3 +126,7 @@ AUTH_USER_MODEL = 'app.User'
 # Settings for media setup for images
 MEDIA_URL = '/media/'
 MEDIA_ROOT = (os.path.join(BASE_DIR, 'media'))
+
+# Crispy Forms setup
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"

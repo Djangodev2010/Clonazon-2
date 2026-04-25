@@ -1,8 +1,13 @@
-{% if is_cart_item %}
-    <button class="btn btn-warning btn-lg px-5 fw-bold">Producted Added To Cart! <i class="bi bi-check-circle-fill text-success"></i></button>
+{% if user.is_authenticated %}
+    {% if is_cart_item %}
+        <button class="btn btn-warning btn-lg px-5 fw-bold">Producted Added To Cart! <i class="bi bi-check-circle-fill text-success"></i></button>
+    {% else %}
+    <form hx-post='{% url "add_to_cart" product.slug %}'>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold"><i class="bi bi-cart-plus me-2"></i>Add to Cart</button>
+    </form>
+    {% endif %}
 {% else %}
-<form hx-post='{% url "add_to_cart" product.id %}'>
-    {% csrf_token %}
-    <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold"><i class="bi bi-cart-plus me-2"></i>Add to Cart</button>
-</form>
+    <a href='{% url "login" %}'><button class="btn btn-warning btn-lg px-5 fw-bold">Login Now To Add Item To Cart</button></a>
 {% endif %}
+

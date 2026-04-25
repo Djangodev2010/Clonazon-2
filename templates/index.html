@@ -6,28 +6,31 @@
         <div class="container my-5">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold text-primary">Your Cart</h2>
-                <a href="#" class="btn btn-primary btn-lg">View Full Cart</a>
+                <a href='{% url "profile" user.id %}' class="btn btn-primary btn-lg">View Full Cart</a>
             </div>
-            
-            <div class="row g-4">
-                {% for cart_product in cart_products %}
-                    <div class="col-md-4">
-                        <div class="card h-60 w-auto">
-                            <img src="{{cart_product.product.image.url}}"
-                            class="card-img-top" alt="Product"
-                            style="width: 100%; height: 80px; object-fit: contain;" >
-                            <div class="card-body">
-                                <h5 class="card-title">{{cart_product.product.name}}</h5>
-                                <p class="card-text text-muted">{{cart_product.description}}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 mb-0">₹{{cart_product.price}}</span>
-                                    <button class="btn btn-sm btn-outline-danger">Remove</button>
+            {% if cart_products %}
+                <div class="row g-4">
+                    {% for cart_product in cart_products %}
+                        <div class="col-md-4">
+                            <div class="card h-60 w-auto">
+                                <img src="{{cart_product.product.image.url}}"
+                                class="card-img-top" alt="Product"
+                                style="width: 100%; height: 80px; object-fit: contain;" >
+                                <div class="card-body">
+                                    <h5 class="card-title">{{cart_product.product.name}}</h5>
+                                    <p class="card-text text-muted">{{cart_product.description}}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="h5 mb-0">₹{{cart_product.price}}</span>
+                                        <a href='{% url "remove_cart_item" cart_product.id %}'><button class="btn btn-sm btn-outline-danger">Remove</button></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+            <h4 class="text-secondary">Sorry, You Don't Have Any Products In Your Cart...</h4>
+            {% endif %}
         </div>
     {% endif %}
     
@@ -49,7 +52,7 @@
                                 {{trending_product.name}}
                             </h6>
                             <p class="text-success fw-bold">₹{{trending_product.price}}</p>
-                            <a href='{% url "product_detail" trending_product.id %}' class="btn btn-sm btn-outline-primary">Quick View</a>
+                            <a href='{% url "product_detail" trending_product.slug %}' class="btn btn-sm btn-outline-primary">Quick View</a>
                         </div>
                     </div>
                 {% endfor %}
@@ -73,7 +76,7 @@
                                 {{latest_product.name}}
                             </h6>
                             <p class="text-success fw-bold">₹{{latest_product.price}}</p>
-                            <a href='{% url "product_detail" latest_product.id %}' class="btn btn-sm btn-outline-primary">Quick View</a>
+                            <a href='{% url "product_detail" latest_product.slug %}' class="btn btn-sm btn-outline-primary">Quick View</a>
                         </div>
                     </div>
                 {% endfor %}

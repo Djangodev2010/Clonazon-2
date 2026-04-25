@@ -1,8 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Product, Cart, CartItem, User, Category, Comment
 from django.shortcuts import get_object_or_404, get_list_or_404
 from django.db.models import Q
-from django.http import HttpResponse
+from .forms import UserRegisterationForm, UserLoginForm, CommentForm
+from django.contrib import auth
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
@@ -82,34 +85,44 @@ def trending_products(request):
     }
     return render(request, 'trending_products.html', context=context)
 
-def product_detail(request, id):
-    product = get_object_or_404(Product, id=id)
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug)
     discount = 0
     if product.discount:
         discount = product.discount
     discounted_price = int(product.price - product.price * product.discount / 100)
     comments = Comment.objects.filter(product=product)
-    cart = Cart.objects.get(user=request.user)
-    is_cart_item = False
-
-    if CartItem.objects.filter(cart=cart, product=product).exists():
-        is_cart_item = True
-    else:
+    if request.user.is_authenticated:
+        cart = Cart.objects.get(user=request.user)
         is_cart_item = False
-    context = {
-        'product': product,
-        'discount': discount,
-        'discounted_price': discounted_price,
-        'comments': comments,
-        'stars': range(5),
-        'is_cart_item': is_cart_item
-    }
-    return render(request, 'product_detail.html', context=context)
+        if CartItem.objects.filter(cart=cart, product=product).exists():
+            is_cart_item = True
+        else:
+            is_cart_item = False
+        context = {
+            'product': product,
+            'discount': discount,
+            'discounted_price': discounted_price,
+            'comments': comments,
+            'stars': list(range(5)),
+            'is_cart_item': is_cart_item
+        }
+        return render(request, 'product_detail.html', context=context)
+    
+    else:
+        context = {
+                'product': product,
+                'discount': discount,
+                'discounted_price': discounted_price,
+                'comments': comments,
+                'stars': list(range(5)),
+            }
+        return render(request, 'product_detail.html', context=context)
 
-def add_to_cart(request, id):
+def add_to_cart(request, slug):
     cart = get_object_or_404(Cart, user=request.user)
     if request.method == 'POST':
-        product = get_object_or_404(Product, id=id)
+        product = get_object_or_404(Product, slug=slug)
         cart_item = CartItem.objects.create(cart=cart, product=product, price=product.price)
     if request.headers.get('HX-Request') == 'true':
         is_cart_item = True
@@ -190,3 +203,72 @@ def remove_cart_item(request, id):
     if request.headers.get('HX-Request') == 'true':
         return render(request, 'partials/cart_product_partial.html', context=context)
     return render(request, 'profile.html', context=context)
+
+def register_view(request):
+    if request.method == 'POST':
+        form = UserRegisterationForm(data=request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            password = form.cleaned_data['password']
+            user.set_password(password)
+            user.save()
+            cart = Cart.objects.create(user=user)
+            return redirect('/login')
+    form = UserRegisterationForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'register.html', context=context)
+
+def login_view(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = auth.authenticate(username=username, password=password)
+            print(user)
+            if user is not None:
+                auth.login(request, user)
+                return redirect('/')
+            messages.error(request, 'Invalid Creditentials!')
+    else:
+
+        form = UserLoginForm()
+    context = {
+        'form': form
+    }
+    return render(request, 'login.html', context=context)
+
+def logout(request):
+    auth.logout(request)
+    return redirect('/')
+
+def add_comment(request, slug):
+    product = get_object_or_404(Product, slug=slug)
+    user = request.user
+    if request.method == 'POST':
+        form = CommentForm(data=request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            if Comment.objects.filter(user=user, product=product).exists():
+                messages.error(request, "You Cannot Post More Than 1 Comment!")
+                return HttpResponseRedirect(request.path_info)
+            else:
+                comment.product, comment.user = product, user
+                comment.save()
+                return HttpResponseRedirect(request.path_info)
+    else:
+        discount = 0
+        if product.discount:
+            discount = product.discount
+        discounted_price = int(product.price - product.price * product.discount / 100)
+        comments = Comment.objects.filter(product=product)
+        context = {
+                'product': product,
+                'discount': discount,
+                'discounted_price': discounted_price,
+                'comments': comments,
+                'stars': list(range(5)),
+            }
+        return render(request, 'product_detail.html', context=context)
