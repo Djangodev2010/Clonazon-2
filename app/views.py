@@ -6,6 +6,7 @@ from .forms import UserRegisterationForm, UserLoginForm, CommentForm
 from django.contrib import auth
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 # Create your views here.
 
@@ -104,6 +105,7 @@ def product_detail(request, slug):
         'discounted_price': discounted_price,
         'comments': comments,
         'stars': list(range(5)),
+        'is_cart_item': is_cart_item,
     }
     return render(request, 'product_detail.html', context)
 
@@ -260,3 +262,29 @@ def add_comment(request, slug):
                 'stars': list(range(5)),
             }
         return render(request, 'product_detail.html', context=context)
+    
+def edit_profile(request):
+    user = request.user
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        user.username = username
+        user.email = email
+
+        if password and password == confirm_password:
+            user.set_password(password)
+        user.save()
+        return redirect('login')
+    
+    cart = get_object_or_404(Cart, user=user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    for cart_item in cart_items:
+        total_price += cart_item.price * cart_item.quantity
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price
+    }
+    return render(request, 'profile.html')
