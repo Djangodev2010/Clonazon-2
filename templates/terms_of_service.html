@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary">Terms of Service</h1>
+                <p class="text-muted">Last Updated: April 26, 2026</p>
+                <hr class="w-25 mx-auto">
+            </div>
+
+            <div class="card shadow-sm border-0 bg-light p-4 p-md-5">
+                <div class="card-body">
+                    <p class="lead">
+                        Welcome to <strong>Clonazon</strong>. By accessing our website, you agree to be bound by these Terms of Service. Please read them carefully.
+                    </p>
+
+                    <h3 class="mt-5 mb-3 text-dark">1. Use of the Site</h3>
+                    <p>
+                        By using Clonazon, you represent that you are at least the age of majority in your jurisdiction. You agree not to use our products for any illegal or unauthorized purpose, nor may you, in the use of the Service, violate any laws in your jurisdiction.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">2. Accuracy of Information</h3>
+                    <p>
+                        While we strive to display our products—like our <strong>Phones</strong> and <strong>Wooden Chairs</strong>—as accurately as possible, we cannot guarantee that your monitor's display of any color will be 100% accurate. We reserve the right to modify the contents of this site at any time.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">3. Modifications to Prices</h3>
+                    <p>
+                        Prices for our products are subject to change without notice. We reserve the right at any time to modify or discontinue the Service (or any part or content thereof) without notice at any time.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">4. User Accounts</h3>
+                    <p>
+                        If you create a <strong>Profile</strong> on Clonazon, you are responsible for maintaining the confidentiality of your account and password. You agree to accept responsibility for all activities that occur under your account.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">5. Intellectual Property</h3>
+                    <p>
+                        All content included on this site, such as text, graphics, logos, and images, is the property of <strong>Clonazon Inc.</strong> and is protected by international copyright laws.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">6. Governing Law</h3>
+                    <p>
+                        These Terms of Service and any separate agreements whereby we provide you Services shall be governed by and construed in accordance with the laws of your local jurisdiction.
+                    </p>
+
+                    <div class="mt-5 p-4 bg-white rounded border text-center">
+                        <p class="mb-0">Questions about the Terms of Service should be sent to our <strong>Help Center</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary">Return to Shopping</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

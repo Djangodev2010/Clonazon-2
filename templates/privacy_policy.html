@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-5 fw-bold text-primary">Privacy Policy</h1>
+                <p class="text-muted">Effective Date: April 26, 2026</p>
+                <hr class="w-25 mx-auto">
+            </div>
+
+            <div class="card shadow-sm border-0 p-4 p-md-5">
+                <div class="card-body">
+                    <p class="lead">
+                        At <strong>Clonazon</strong>, accessible from our modern shopping platform, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Clonazon and how we use it.
+                    </p>
+
+                    <h3 class="mt-5 mb-3 text-dark">1. Information We Collect</h3>
+                    <p>
+                        When you register for an Account (your <strong>Profile</strong>), we may ask for your contact information, including items such as name, company name, address, email address, and telephone number.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">2. How We Use Your Information</h3>
+                    <p>We use the information we collect in various ways, including to:</p>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0">• Provide, operate, and maintain our website</li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">• Improve, personalize, and expand our store offerings</li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">• Understand and analyze how you use our platform</li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">• Develop new products (like more <strong>Phones</strong> or <strong>Furniture</strong>), services, features, and functionality</li>
+                        <li class="list-group-item bg-transparent border-0 ps-0">• Send you emails regarding your orders or our <strong>Newsletter</strong></li>
+                    </ul>
+
+                    <h3 class="mt-4 mb-3 text-dark">3. Log Files</h3>
+                    <p>
+                        Clonazon follows a standard procedure of using log files. These files log visitors when they visit websites. The information collected by log files includes internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, and referring/exit pages.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">4. Cookies and Web Beacons</h3>
+                    <p>
+                        Like any other website, Clonazon uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited.
+                    </p>
+
+                    <h3 class="mt-4 mb-3 text-dark">5. Data Protection Rights</h3>
+                    <p>
+                        We would like to make sure you are fully aware of all of your data protection rights. Every user is entitled to the following:
+                    </p>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item bg-transparent border-0 ps-0"><strong>The right to access</strong> – You have the right to request copies of your personal data.</li>
+                        <li class="list-group-item bg-transparent border-0 ps-0"><strong>The right to rectification</strong> – You have the right to request that we correct any information you believe is inaccurate.</li>
+                    </ul>
+
+                    <div class="mt-5 p-4 bg-light rounded border text-center">
+                        <p class="mb-0 text-muted">By using our website, you hereby consent to our Privacy Policy and agree to its terms.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <p>Have questions? Visit our <a href="{% url 'index' %}" class="text-decoration-none">Help Center</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -15,7 +15,10 @@ urlpatterns = [
     path('cart-item/reduce-quantity/<int:id>/', views.reduce_quantity, name='reduce_quantity'),
     path('cart-item/increase-quantity/<int:id>/', views.increase_quantity, name='increase_quantity'),
     path('cart-item/remove-cart-item/<int:id>/', views.remove_cart_item, name='remove_cart_item'),
-    path('edit-profile/', views.edit_profile, name='edit_profile')
+    path('edit-profile/', views.edit_profile, name='edit_profile'),
+    path('about-us/', views.about_us, name='about_us'),
+    path('terms-of-service/', views.terms_of_service, name='terms_of_service'),
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
 
 ]
 

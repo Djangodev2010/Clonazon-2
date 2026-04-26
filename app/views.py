@@ -288,3 +288,12 @@ def edit_profile(request):
         'total_price': total_price
     }
     return render(request, 'profile.html')
+
+def about_us(request):
+    return render(request, 'about_us.html')
+
+def terms_of_service(request):
+    return render(request, 'terms_of_service.html')
+
+def privacy_policy(request):
+    return render(request, 'privacy_policy.html')
