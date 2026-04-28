@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% load mathfilters %}
+
+{% block content %}
+<div style="max-width: 1100px; margin: 40px auto; padding: 20px; font-family: 'Segoe UI', Roboto, sans-serif;">
+    <h2 style="color: #2c3e50; margin-bottom: 30px; border-bottom: 2px solid #f4f4f4; padding-bottom: 10px;">Checkout</h2>
+
+    <form action="" method="POST" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px;">
+        {% csrf_token %}
+        
+        <div style="background: #ffffff; padding: 25px; border-radius: 8px; border: 1px solid #e0e0e0;">
+            <h3 style="margin-top: 0; color: #34495e; margin-bottom: 20px;">Shipping Information</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div style="display: flex; flex-direction: column;">
+                    <label style="font-weight: 600; margin-bottom: 5px;">Username</label>
+                    <input type="text" name="username" value="{{ user.username }}" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; background: #f9f9f9;" readonly>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label style="font-weight: 600; margin-bottom: 5px;">Email</label>
+                    <input type="email" name="email" value="{{ user.email }}" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 5px; display: block;">House No. / Building Name</label>
+                <input type="text" name="house_no" value="{{user.house_no}}" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 5px; display: block;">Landmark</label>
+                <input type="text" name="landmark" value="{{user.landmark}}" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <div style="display: flex; flex-direction: column;">
+                    <label style="font-weight: 600; margin-bottom: 5px;">City</label>
+                    <input type="text" name="city" value="{{user.city}}" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label style="font-weight: 600; margin-bottom: 5px;">State</label>
+                    <input type="text" name="state" value="{{user.state}}" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+                <div style="display: flex; flex-direction: column;">
+                    <label style="font-weight: 600; margin-bottom: 5px;">Pin Code</label>
+                    <input type="text" name="pincode" value="{{user.area_pincode}}" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" required>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px; color: #34495e; margin-bottom: 20px;">Payment Method</h3>
+            <div style="padding: 15px; border: 1px solid #3498db; background: #ebf5fb; border-radius: 6px;">
+                <input type="radio" id="cod" name="payment_method" value="COD" checked>
+                <label for="cod" style="font-weight: bold; color: #2980b9;">Cash on Delivery (COD)</label>
+                <p style="margin: 5px 0 0 20px; font-size: 0.85em; color: #5dade2;">Pay when your product arrives at your doorstep!</p>
+            </div>
+        </div>
+
+        <div style="background: #fdfdfd; padding: 25px; border-radius: 8px; border: 1px solid #e0e0e0; height: fit-content;">
+            <h3 style="margin-top: 0; color: #34495e; border-bottom: 1px solid #eee; padding-bottom: 10px;">Your Order</h3>
+            
+            {% for cart_item in cart_items %}
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; padding-top: 10px;">
+                    <span><strong>{{cart_item.product.name}}</strong> x {{cart_item.quantity}}</span>
+                    <span>₹{{cart_item.product.price|mul:cart_item.quantity}}</span>
+                </div>
+
+            {% endfor %}
+
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #7f8c8d;">
+                <span>Shipping</span>
+                <span style="color: #27ae60;">FREE</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; font-size: 1.3em; font-weight: bold; color: #e74c3c; margin-top: 15px;">
+                <span>Total</span>
+                <span>₹{{total_price}}</span>
+            </div>
+
+            <button type="submit" style="width: 100%; background: #27ae60; color: white; border: none; padding: 15px; margin-top: 25px; border-radius: 6px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.3s;">
+                Place Order
+            </button>
+            <p style="text-align: center; font-size: 0.8em; color: #bdc3c7; margin-top: 15px;">By placing this order, you agree to our Terms & Conditions.</p>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Product, Cart, CartItem, User, Category, Comment
-from django.shortcuts import get_object_or_404, get_list_or_404
+from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .forms import UserRegisterationForm, UserLoginForm, CommentForm
 from django.contrib import auth
@@ -14,24 +14,21 @@ def index(request):
     latest_products = Product.objects.all().order_by('-created_at')[:4]
     trending_products = Product.objects.filter(is_trending=True)[:4]
 
-    try:
+    if request.user.is_authenticated:
         cart = Cart.objects.get(user=request.user)
         cart_products = CartItem.objects.filter(cart=cart)[:3]
-
         context = {
-            'cart_products': cart_products,
             'trending_products': trending_products,
             'latest_products': latest_products,
+            'cart_products': cart_products
         }
+
         return render(request, 'index.html', context=context)
-    except Exception as e:
-        print("YES")
 
     context = {
         'trending_products': trending_products,
         'latest_products': latest_products,
     }
-    print(context)
 
     return render(request, 'index.html', context=context)
 
@@ -269,13 +266,24 @@ def edit_profile(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
+        house_no = request.POST.get('house_no')
+        city = request.POST.get('city')
+        state = request.POST.get('state')
+        landmark = request.POST.get('landmark')
+        pincode = request.POST.get('pincode')
         confirm_password = request.POST.get('confirm_password')
         user.username = username
         user.email = email
+        user.house_no = house_no
+        user.city = city
+        user.state = state
+        user.landmark = landmark
+        user.area_pincode = pincode
 
-        if password and password == confirm_password:
+        if password != '' and password == confirm_password:
             user.set_password(password)
         user.save()
+        messages.success(request, 'Information Saved Successfully!')
         return redirect('login')
     
     cart = get_object_or_404(Cart, user=user)
@@ -297,3 +305,24 @@ def terms_of_service(request):
 
 def privacy_policy(request):
     return render(request, 'privacy_policy.html')
+
+def cart_checkout(request):
+    user = request.user
+    cart = Cart.objects.get(user=user)
+    cart_items = CartItem.objects.filter(cart=cart)
+    total_price = 0
+    for cart_item in cart_items:
+        total_price += cart_item.product.price * cart_item.quantity
+    print(total_price)
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    }
+    return render(request, 'checkout.html', context=context)
+
+def checkout(request, slug):
+    return render(request, 'checkout.html')
+
+def order_details(request):
+    return render(request, 'order_details.html')
+

@@ -3,8 +3,21 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     is_seller = models.BooleanField(default=False)
+    house_no = models.PositiveIntegerField()
+    landmark = models.CharField(max_length=200, default='')
+    city = models.CharField(max_length=200, default='')
+    district = models.CharField(max_length=200, default='')
+    state = models.CharField(max_length=200, default='')
+    area_pincode = models.PositiveIntegerField(default=202020)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_address(self):
+        return self.house_no + ', ' + self.district + ', ' + self.city + ', ' + self.state + ', ' + self.area_pincode
+    
+    def save(self, *args, **kwargs):
+        if not self.username:
+            self.username = self.first_name + '-' + self.last_name
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -36,6 +49,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if self.discount:
+            self.price -= int(self.price * (self.discount/100))
+        super(Product, self).save(*args, **kwargs)
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart', unique=True)
@@ -62,3 +80,12 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.user.username + ': ' + self.product.name    
+
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + ': '  + self.product.name
+    

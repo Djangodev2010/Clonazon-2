@@ -4,7 +4,7 @@ from .models import User, Comment
 class UserRegisterationForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email', 'password']
+        fields = ['first_name', 'last_name', 'email', 'password', 'house_no', 'state', 'city', 'district', 'landmark', 'area_pincode']
 
 class UserLoginForm(forms.Form):
     username = forms.CharField(
