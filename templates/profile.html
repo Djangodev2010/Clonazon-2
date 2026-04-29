@@ -22,6 +22,9 @@
                     <button class="nav-link mb-2" id="v-pills-wishlist-tab" data-bs-toggle="pill" data-bs-target="#v-pills-wishlist" type="button" role="tab">
                         <i class="bi bi-heart me-2"></i> Wishlist
                     </button>
+                    <a style="margin:auto; text-decoration:none;" href='{% url "order_details" %}'><button class="nav-link mb-2" id="v-pills-wishlist-tab" data-bs-toggle="pill" data-bs-target="#v-pills-wishlist" type="button" role="tab">
+                        My Orders
+                    </button></a>
                     <form method="POST" action='{% url "logout" %}' style="margin:auto;">
                         {% csrf_token %}
                         <button class="nav-link text-danger" type="submit">

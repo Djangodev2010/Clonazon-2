@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Product, Cart, CartItem, User, Category, Comment
+from .models import Product, Cart, CartItem, User, Category, Comment, Order
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .forms import UserRegisterationForm, UserLoginForm, CommentForm
@@ -306,23 +306,47 @@ def terms_of_service(request):
 def privacy_policy(request):
     return render(request, 'privacy_policy.html')
 
-def cart_checkout(request):
+def checkout(request):
     user = request.user
     cart = Cart.objects.get(user=user)
     cart_items = CartItem.objects.filter(cart=cart)
+    if request.method == 'POST':
+        orders_to_create = []
+        for cart_item in cart_items:
+            orders_to_create.append(
+                Order(user=user, seller=cart_item.product.seller, product=cart_item.product, quantity=cart_item.quantity)
+            )
+        Order.objects.bulk_create(orders_to_create)
+
+        cart_items.delete()
+
+        return redirect('order_details')
+
     total_price = 0
+    free_shipping = False
     for cart_item in cart_items:
         total_price += cart_item.product.price * cart_item.quantity
-    print(total_price)
+    if total_price >= 300:
+        free_shipping = True
+
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
+        'free_shipping': free_shipping,
     }
     return render(request, 'checkout.html', context=context)
 
-def checkout(request, slug):
-    return render(request, 'checkout.html')
-
 def order_details(request):
-    return render(request, 'order_details.html')
+    user = request.user
+    orders = Order.objects.filter(user=user)
+    context = {
+        'orders': orders
+    }
+    return render(request, 'order_details.html', context=context)
 
+def one_order_details(request, id):
+    order = Order.objects.get(id=id)
+    context = {
+        'order': order,
+    }
+    return render(request, 'one_order_details.html', context=context)

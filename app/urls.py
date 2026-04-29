@@ -19,9 +19,10 @@ urlpatterns = [
     path('about-us/', views.about_us, name='about_us'),
     path('terms-of-service/', views.terms_of_service, name='terms_of_service'),
     path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
-    path('checkout/', views.cart_checkout, name='cart_checkout'),
-    path('checkout/<slug:slug>/', views.checkout, name='checkout'),
-    path('order-details', views.order_details, name='order_details'),
+    path('checkout/', views.checkout, name='cart_checkout'),
+    path('order/', views.checkout, name='order'),
+    path('order-details/', views.order_details, name='order_details'),
+    path('order-details/<int:id>/', views.one_order_details, name='one_order_details'),
 
 ]
 

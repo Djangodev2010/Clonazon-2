@@ -81,10 +81,17 @@ class Comment(models.Model):
     def __str__(self):
         return self.user.username + ': ' + self.product.name    
 
+PRODUCT_STATUS = (
+    ('Pending', 'Pending'),
+    ('Delivered', 'Delivered')
+)
+
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    status = models.CharField(choices=PRODUCT_STATUS, default='Processing')
+    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return self.user.username + ': '  + self.product.name

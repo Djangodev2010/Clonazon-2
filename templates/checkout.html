@@ -69,7 +69,11 @@
 
             <div style="display: flex; justify-content: space-between; margin-bottom: 10px; color: #7f8c8d;">
                 <span>Shipping</span>
-                <span style="color: #27ae60;">FREE</span>
+                {% if free_shipping %}
+                    <span style="color: #27ae60;">FREE</span>
+                {% else %}
+                    <span style="color: #27ae60;">₹40</span>
+                {% endif %}
             </div>
 
             <div style="display: flex; justify-content: space-between; font-size: 1.3em; font-weight: bold; color: #e74c3c; margin-top: 15px;">
@@ -77,9 +81,12 @@
                 <span>₹{{total_price}}</span>
             </div>
 
-            <button type="submit" style="width: 100%; background: #27ae60; color: white; border: none; padding: 15px; margin-top: 25px; border-radius: 6px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.3s;">
-                Place Order
-            </button>
+            <form method="POST" action='{% url "order" %}'>
+                {% csrf_token %}
+                <button type="submit" style="width: 100%; background: #27ae60; color: white; border: none; padding: 15px; margin-top: 25px; border-radius: 6px; font-size: 1.1em; font-weight: bold; cursor: pointer; transition: background 0.3s;">
+                    Place Order
+                </button>
+            </form> 
             <p style="text-align: center; font-size: 0.8em; color: #bdc3c7; margin-top: 15px;">By placing this order, you agree to our Terms & Conditions.</p>
         </div>
     </form>
