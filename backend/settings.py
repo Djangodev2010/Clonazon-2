@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'app',
     'crispy_forms',
     'crispy_bootstrap5',
-    'mathfilters'
+    'mathfilters',
+    'seller',
 ]
 
 MIDDLEWARE = [
