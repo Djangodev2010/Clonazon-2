@@ -7,8 +7,8 @@ class UserRegisterationForm(forms.ModelForm):
         fields = ['first_name', 'last_name', 'email', 'password', 'house_no', 'state', 'city', 'district', 'landmark', 'area_pincode']
 
 class UserLoginForm(forms.Form):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'})
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})

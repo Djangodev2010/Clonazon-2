@@ -211,10 +211,9 @@ def login_view(request):
     if request.method == 'POST':
         form = UserLoginForm(data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
             password = form.cleaned_data['password']
-            user = auth.authenticate(username=username, password=password)
-            print(user)
+            user = auth.authenticate(username=email, password=password)
             if user is not None:
                 auth.login(request, user)
                 return redirect('/')
@@ -263,16 +262,18 @@ def add_comment(request, slug):
 def edit_profile(request):
     user = request.user
     if request.method == 'POST':
-        username = request.POST.get('username')
+        first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         email = request.POST.get('email')
         password = request.POST.get('password')
         house_no = request.POST.get('house_no')
         city = request.POST.get('city')
         state = request.POST.get('state')
         landmark = request.POST.get('landmark')
-        pincode = request.POST.get('pincode')
+        pincode = request.POST.get('area_pincode')
         confirm_password = request.POST.get('confirm_password')
-        user.username = username
+        user.first_name = first_name
+        user.last_name = last_name
         user.email = email
         user.house_no = house_no
         user.city = city

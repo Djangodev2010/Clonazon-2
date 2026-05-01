@@ -1,16 +1,21 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 class User(AbstractUser):
+    email = models.EmailField(unique=True)
     is_seller = models.BooleanField(default=False)
     house_no = models.PositiveIntegerField()
     landmark = models.CharField(max_length=200, default='')
     city = models.CharField(max_length=200, default='')
-    district = models.CharField(max_length=200, default='')
+    district = models.CharField(max_length=200)
     state = models.CharField(max_length=200, default='')
     area_pincode = models.PositiveIntegerField(default=202020)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     def get_address(self):
         return self.house_no + ', ' + self.district + ', ' + self.city + ', ' + self.state + ', ' + self.area_pincode
@@ -18,6 +23,7 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.username:
             self.username = self.first_name + '-' + self.last_name
+        return super(User, self).save(*args, **kwargs)
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
@@ -30,6 +36,17 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class Inventory(models.Model):
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def clean(self):
+        if self.seller.is_seller:
+            return super().clean()
+        raise ValidationError("You Are Not An Authorised Seller!")
+
+    def __str__(self):
+        return self.seller.first_name + "'s Inventory"
+
 class Product(models.Model):
     name = models.CharField(max_length=355)
     image = models.ImageField(upload_to='product_images/')
@@ -40,6 +57,7 @@ class Product(models.Model):
     box_components = models.CharField(max_length=455)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     seller = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
+    inventory = models.ForeignKey(Inventory, on_delete=models.CASCADE, related_name='inventory_products', default=None, null=True, blank=True)
     slug = models.SlugField(max_length=355)
     discount = models.PositiveIntegerField(default=0)
     free_delivery = models.BooleanField(default=False)
@@ -53,6 +71,8 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if self.discount:
             self.price -= int(self.price * (self.discount/100))
+        elif not self.inventory:
+            self.inventory = self.seller.inventory
         super(Product, self).save(*args, **kwargs)
 
 class Cart(models.Model):

@@ -2,23 +2,47 @@
     {% csrf_token %}
     <div class="row g-3">
         <div class="col-md-6">
-            <label class="form-label">Username</label>
-            <input type="text" name="username" class="form-control" value="{{user.username}}">
+            <label class="form-label">First Name</label>
+            <input type="text" name="first_name" class="form-control" value="{{user.first_name}}">
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Last Name</label>
+            <input type="text" name="last_name" class="form-control" value="{{user.last_name}}">
+        </div>
+        <div class="col-12">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-control" value="{{user.email}}">
+        </div>
+
+        <div class="col-12 mt-4">
+            <h6 class="text-primary fw-bold">Address Details</h6>
+            <hr>
+        </div>
+        <div class="col-md-4">
             <label class="form-label">House Number</label>
             <input type="text" name="house_no" class="form-control" value="{{user.house_no}}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Landmark</label>
+            <input type="text" name="landmark" class="form-control" value="{{user.landmark}}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Pin Code</label>
+            <input type="number" name="area_pincode" class="form-control" value="{{user.area_pincode}}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">City</label>
+            <input type="text" name="city" class="form-control" value="{{user.city}}">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">District</label>
+            <input type="text" name="district" class="form-control" value="{{user.district}}">
+        </div>
+        <div class="col-md-4">
             <label class="form-label">State</label>
             <input type="text" name="state" class="form-control" value="{{user.state}}">
         </div>
-        <div class="col-md-6">
-            <label class="form-label">Email Address</label>
-            <input type="email" name="email" class="form-control" value="{{user.email}}">
-            <label class="form-label">City</label>
-            <input type="text" name="city" class="form-control" value="{{user.city}}">
-            <label class="form-label">Pin Code</label>
-            <input type="number" name="pincode" class="form-control" value="{{user.area_pincode}}">
-        </div>
-        <label class="form-label">Landmark</label>
-        <input type="text" name="landmark" class="form-control" value="{{user.landmark}}">
+
         <div class="col-12 mt-4">
             <h6 class="text-primary fw-bold">Change Password</h6>
             <hr>
@@ -31,6 +55,7 @@
             <label class="form-label">Confirm New Password</label>
             <input type="password" name="confirm_password" class="form-control" placeholder="Confirm new password">
         </div>
+
         <div class="col-12 mt-4">
             <button type="submit" class="btn btn-primary px-4">Save Changes</button>
             <button type="reset" class="btn btn-outline-secondary ms-2">Cancel</button>
