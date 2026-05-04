@@ -1,13 +1,67 @@
 {% if user.is_authenticated %}
     {% if is_cart_item %}
-        <button class="btn btn-warning btn-lg px-5 fw-bold">Producted Added To Cart! <i class="bi bi-check-circle-fill text-success"></i></button>
+        <div class="d-grid gap-2">
+            <button class="btn btn-outline-success btn-lg px-5 fw-bold shadow-sm" disabled>
+                <i class="bi bi-cart-check-fill me-2"></i>In Your Cart
+            </button>
+        </div>
     {% else %}
-    <form hx-post='{% url "add_to_cart" product.slug %}'>
-        {% csrf_token %}
-        <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold"><i class="bi bi-cart-plus me-2"></i>Add to Cart</button>
-    </form>
+        {% if inventory_item.quantity > 0 %}
+            {% if inventory_item.quantity < 15 %}
+                <div class="stock-alert mb-3 p-2 bg-light rounded border-start border-warning border-4 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <span class="text-dark fw-bold small text-uppercase tracking-wider">
+                            <i class="bi bi-lightning-charge-fill text-warning me-1 animate-pulse"></i> 
+                            Limited Stock Remaining
+                        </span>
+                        <span class="badge bg-danger rounded-pill">{{ inventory_item.quantity }} left</span>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" 
+                             role="progressbar" 
+                             style="width: {% widthratio inventory_item.quantity 15 100 %}%">
+                        </div>
+                    </div>
+                    <p class="text-muted small mt-2 mb-0">Don't miss out! This item is selling fast.</p>
+                </div>
+            {% endif %}
+
+            <form hx-post='{% url "add_to_cart" product.slug %}' class="d-grid">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold text-dark shadow hover-lift">
+                    <i class="bi bi-cart-plus-fill me-2"></i>Add to Cart
+                </button>
+            </form>
+        {% else %}
+            <div class="alert alert-secondary d-flex align-items-center" role="alert">
+                <i class="bi bi-exclamation-octagon me-2"></i>
+                <div>Currently Out of Stock</div>
+            </div>
+        {% endif %}
     {% endif %}
 {% else %}
-    <a href='{% url "login" %}'><button class="btn btn-warning btn-lg px-5 fw-bold">Login Now To Add Item To Cart</button></a>
+    <div class="d-grid">
+        <a href='{% url "login" %}' class="btn btn-dark btn-lg px-5 fw-bold shadow">
+            <i class="bi bi-person-lock me-2"></i>Login to Shop
+        </a>
+    </div>
 {% endif %}
 
+<style>
+    /* Adding a little extra sparkle! */
+    .animate-pulse {
+        animation: pulse-red 2s infinite;
+    }
+    @keyframes pulse-red {
+        0% { transform: scale(0.95); opacity: 0.7; }
+        70% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(0.95); opacity: 0.7; }
+    }
+    .hover-lift {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>

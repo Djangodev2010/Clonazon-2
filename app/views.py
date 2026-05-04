@@ -6,7 +6,7 @@ from .forms import UserRegisterationForm, UserLoginForm, CommentForm
 from django.contrib import auth
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from seller.models import InventoryItem
 
 # Create your views here.
 
@@ -96,6 +96,8 @@ def product_detail(request, slug):
         if cart:
             is_cart_item = CartItem.objects.filter(cart=cart, product=product).exists()
 
+    inventory_item = InventoryItem.objects.get(product=product)
+
     context = {
         'product': product,
         'discount': discount,
@@ -103,6 +105,7 @@ def product_detail(request, slug):
         'comments': comments,
         'stars': list(range(5)),
         'is_cart_item': is_cart_item,
+        'inventory_item': inventory_item,
     }
     return render(request, 'product_detail.html', context)
 
@@ -216,6 +219,8 @@ def login_view(request):
             user = auth.authenticate(username=email, password=password)
             if user is not None:
                 auth.login(request, user)
+                if user.is_seller:
+                    return redirect('seller:index')
                 return redirect('/')
             messages.error(request, 'Invalid Creditentials!')
     else:
@@ -227,6 +232,9 @@ def login_view(request):
     return render(request, 'login.html', context=context)
 
 def logout(request):
+    if request.user.is_seller:
+        auth.logout(request)
+        return redirect('seller:seller_login')    
     auth.logout(request)
     return redirect('/')
 
@@ -285,6 +293,8 @@ def edit_profile(request):
             user.set_password(password)
         user.save()
         messages.success(request, 'Information Saved Successfully!')
+        if request.user.is_seller:
+            return redirect('seller:seller_login')
         return redirect('login')
     
     cart = get_object_or_404(Cart, user=user)
@@ -311,14 +321,18 @@ def checkout(request):
     user = request.user
     cart = Cart.objects.get(user=user)
     cart_items = CartItem.objects.filter(cart=cart)
+    
     if request.method == 'POST':
         orders_to_create = []
         for cart_item in cart_items:
-            orders_to_create.append(
-                Order(user=user, seller=cart_item.product.seller, product=cart_item.product, quantity=cart_item.quantity)
-            )
+            if cart_item.quantity > InventoryItem.objects.get(product=cart_item.product).quantity:
+                messages.error(request, 'Product Quantity Exceeds The Current Inventory Stock!')
+                return redirect('cart_checkout')
+            else:
+                orders_to_create.append(
+                    Order(user=user, seller=cart_item.product.seller, product=cart_item.product)
+                )
         Order.objects.bulk_create(orders_to_create)
-
         cart_items.delete()
 
         return redirect('order_details')
