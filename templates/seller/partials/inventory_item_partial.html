@@ -1,0 +1,36 @@
+{% for inventory_item in inventory_items %}
+    <tr>
+        <td class="ps-4">
+            <div class="fw-bold">{{inventory_item.product.name}}</div>
+        </td>
+        <td>{{inventory_item.product.category.name}}</td>
+        <td>₹{{inventory_item.product.price}}</td>
+        <td>{{inventory_item.quantity}}</td>
+        {% if inventory_item.quantity == 0 %}
+            <td><span class="badge bg-success bg-opacity-10 text-danger px-3">Out Of Stock</span></td>
+        {% elif inventory_item.quantity < 10 %}
+            <td><span class="badge bg-success bg-opacity-10 text-warning px-3">Low Stock</span></td>
+        {% else %}
+            <td><span class="badge bg-success bg-opacity-10 text-success px-3">In Stock</span></td>
+        {% endif %}
+        <td class="text-end pe-4">
+            <div class="d-flex justify-content-end align-items-center">
+                <a href='{% url "seller:edit_product" inventory_item.product.slug %}' class="me-1">
+                    <button class="btn btn-sm btn-light border text-primary">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                </a>
+                
+                <form 
+                hx-post='{% url "seller:delete_product" inventory_item.product.slug %}'
+                hx-target="#inventory_item"
+                class="m-0">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-light border text-danger" type="submit">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </form>
+            </div>
+        </td>
+    </tr>
+{% endfor %}

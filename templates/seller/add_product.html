@@ -1,0 +1,14 @@
+{% extends "seller/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<h1 class="text-primary mb-3" style="font-weight: 0.9rem;">Add A Product</h1>
+
+<form method="POST" action='{% url "seller:add_product" %}' enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form | crispy}}
+    <button class="btn btn-primary" type="submit">Submit</button>
+</form>
+
+{% endblock content %}

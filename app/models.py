@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 class User(AbstractUser):
     email = models.EmailField(unique=True)
@@ -59,9 +60,10 @@ class Product(models.Model):
     def save(self, *args, **kwargs):
         if self.discount:
             self.price -= int(self.price * (self.discount/100))
-        elif not self.inventory:
-            self.inventory = self.seller.inventory
-        super(Product, self).save(*args, **kwargs)
+        
+        if not self.slug:
+            self.slug = slugify(self.name)
+        return super(Product, self).save(*args, **kwargs)
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cart', unique=True)
@@ -90,7 +92,7 @@ class Comment(models.Model):
         return self.user.username + ': ' + self.product.name    
 
 PRODUCT_STATUS = (
-    ('Pending', 'Pending'),
+    ('Processing', 'Processing'),
     ('Delivered', 'Delivered')
 )
 

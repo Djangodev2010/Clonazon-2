@@ -1,5 +1,6 @@
 from django import forms
-from app.models import User
+from app.models import User, Product
+from .models import InventoryItem
 
 class SellerRegisterationForm(forms.ModelForm):
     class Meta:
@@ -14,3 +15,13 @@ class SellerLoginForm(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
     )
+
+class ProductForm(forms.ModelForm):
+
+    quantity = forms.IntegerField(
+        widget=forms.NumberInput(attrs={'class': 'form-control', 'min': '1'})
+    )
+
+    class Meta:
+        model = Product
+        fields = ['name', 'image', 'price', 'description', 'country_of_origin', 'weight', 'box_components', 'category', 'discount']
