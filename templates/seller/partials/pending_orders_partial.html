@@ -13,19 +13,19 @@
         <div class="col-md-4">
             <div class="card border-0 shadow-sm p-3 text-center">
                 <small class="text-uppercase fw-bold text-muted">Ready to Ship</small>
-                <h3 class="display-6 fw-bold">8</h3>
+                <h3 class="display-6 fw-bold">{{ready_to_ship}}</h3>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card border-0 shadow-sm p-3 text-center border-start border-danger border-4">
                 <small class="text-uppercase fw-bold text-muted">Urgent (Overdue)</small>
-                <h3 class="display-6 fw-bold text-danger">3</h3>
+                <h3 class="display-6 fw-bold text-danger">{{urgent_orders}}</h3>
             </div>
         </div>
         <div class="col-md-4">
             <div class="card border-0 shadow-sm p-3 text-center">
                 <small class="text-uppercase fw-bold text-muted">Estimated Revenue</small>
-                <h3 class="display-6 fw-bold text-success">₹14,250</h3>
+                <h3 class="display-6 fw-bold text-success">₹{{estimated_revenue}}</h3>
             </div>
         </div>
     </div>
@@ -35,7 +35,6 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                     <tr>
-                        <th class="ps-4">Order ID</th>
                         <th>Customer</th>
                         <th>Product Details</th>
                         <th>Order Date</th>
@@ -45,38 +44,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="ps-4 fw-bold">#ORD-8821</td>
-                        <td>Jane Cooper</td>
-                        <td>
-                            <div class="d-flex flex-column">
-                                <span>Phone 2</span>
-                                <small class="text-muted">SKU: WH-1000XM4</small>
-                            </div>
-                        </td>
-                        <td>May 4, 2026</td>
-                        <td>₹89</td>
-                        <td><span class="badge rounded-pill bg-info text-dark">Processing</span></td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-primary px-3">Ship Now</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="ps-4 fw-bold">#ORD-8822</td>
-                        <td>Arlene McCoy</td>
-                        <td>
-                            <div class="d-flex flex-column">
-                                <span>Painting 2</span>
-                                <small class="text-muted">SKU: PT-442</small>
-                            </div>
-                        </td>
-                        <td>May 4, 2026</td>
-                        <td>₹29</td>
-                        <td><span class="badge rounded-pill bg-info text-dark">Processing</span></td>
-                        <td class="text-end pe-4">
-                            <button class="btn btn-sm btn-primary px-3">Ship Now</button>
-                        </td>
-                    </tr>
+                    {% for pending_order in pending_orders %}
+                        <tr>
+                            <td>{{pending_order.user.first_name}} {{pending_order.user.last_name}}</td>
+                            <td>
+                                <div class="d-flex flex-column">
+                                    <span>{{pending_order.product.name}}</span>
+                                    <small class="text-muted">SKU: WH-1000XM4</small>
+                                </div>
+                            </td>
+                            <td>{{pending_order.product.updated_at}}</td>
+                            <td>₹{{pending_order.product.price}}</td>
+                            <td><span class="badge rounded-pill bg-info text-dark">{{pending_order.status}}</span></td>
+                            <td class="text-end pe-4">
+                                <a href='{% url "seller:ship_order" pending_order.id %}'><button class="btn btn-sm btn-primary px-3">Ship Now</button></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

@@ -93,7 +93,8 @@ class Comment(models.Model):
 
 PRODUCT_STATUS = (
     ('Processing', 'Processing'),
-    ('Delivered', 'Delivered')
+    ('Delivered', 'Delivered'),
+    ('Shipped', 'Shipped')
 )
 
 class Order(models.Model):
@@ -102,6 +103,8 @@ class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     status = models.CharField(choices=PRODUCT_STATUS, default='Processing')
     quantity = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.user.username + ': '  + self.product.name

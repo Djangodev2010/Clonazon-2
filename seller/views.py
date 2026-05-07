@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, get_list_or_404
 from .decorators import seller_only_access
 from .forms import SellerRegisterationForm, SellerLoginForm, ProductForm
 from django.contrib import messages
 from django.contrib import auth
 from .models import Inventory, InventoryItem
 from app.models import Order, Product
+from django.utils import timezone
 
 # Create your views here.
 
@@ -40,7 +41,7 @@ def seller_login_view(request):
             user = auth.authenticate(username=email, password=password)
             if user is not None:
                 auth.login(request, user)
-                return redirect('seller:index')
+                return redirect('seller:seller_profile')
             messages.error(request, 'Invalid Credentials!')
     form = SellerLoginForm()
     context = {
@@ -74,9 +75,39 @@ def inventory(request):
 
 @seller_only_access()
 def pending_orders(request):
+    pending_orders = Order.objects.filter(seller=request.user)
+    urgent_orders = 0
+    ready_to_ship = len(pending_orders)
+    estimated_revenue = 0
+    for pending_order in pending_orders:
+        estimated_revenue += pending_order.product.price
+        now = timezone.now()
+        diff = now - pending_order.updated_at
+        if diff.total_seconds() > 40000:
+            urgent_orders += 1
+
+    context = {
+        'pending_orders': pending_orders,
+        'urgent_orders': urgent_orders,
+        'ready_to_ship': ready_to_ship,
+        'estimated_revenue': estimated_revenue
+    }
     if request.headers.get('HX-Request') == 'true':
-        return render(request, 'seller/partials/pending_orders_partial.html')
-    return render(request, 'seller/pending_orders.html')
+        return render(request, 'seller/partials/pending_orders_partial.html', context=context)
+    return render(request, 'seller/pending_orders.html', context=context)
+
+def ship_order(request, id):    
+    order = get_object_or_404(Order, id=id)
+    context = {
+        'order': order,
+    }
+    return render(request, 'seller/confirm_order_shipment.html', context=context)
+
+def confirm_shipment(request, id):
+    order = get_object_or_404(Order, id=id)
+    order.status = 'Shipping'
+    order.save(update_fields=['status'])
+    return redirect('seller:pending_orders')
 
 def add_product(request):
     if request.method == 'POST':

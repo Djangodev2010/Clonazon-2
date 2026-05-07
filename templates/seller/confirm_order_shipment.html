@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Shipment | Static Preview</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, sans-serif;
+        }
+        .shipment-container {
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 18px 25px;
+            font-weight: 700;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 25px;
+        }
+        .label {
+            color: #888;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        .info {
+            font-size: 1rem;
+            color: #2d3436;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .product-highlight {
+            background: #f0f7ff;
+            border-left: 5px solid #007bff;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 4px;
+        }
+        .btn-ship {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-ship:hover {
+            background-color: #0056b3;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+        .action-bar {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px 25px;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="shipment-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-primary mb-0">Confirm Shipment</h2>
+            <small class="text-muted">Review details before updating status</small>
+        </div>
+        <span class="badge bg-dark px-3 py-2 fs-6">ORDER ID: #{{order.id}}</span>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            📦 Item for Dispatch
+        </div>
+        <div class="product-highlight">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <div class="label">Product Name</div>
+                    <div class="info" style="font-size: 1.2rem;">{{order.product.name}}</div>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="label">Quantity</div>
+                    <div class="info" style="font-size: 1.5rem;">{{order.quantity}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            🚚 Shipping & Customer Details
+        </div>
+        <div class="detail-grid">
+            <div>
+                <div class="label">Buyer Information</div>
+                <div class="info">{{order.user.first_name}} {{order.user.last_name}}</div>
+                <div class="text-muted small">{{order.user.email}}</div>
+            </div>
+            
+            <div>
+                <div class="label">Shipping Address</div>
+                <div class="info">
+                    {{order.user.house_no}} {{order.user.landmark}}<br>
+                    {{order.user.district}}, {{order.user.city}}<br>
+                    {{order.user.state}} - {{order.user.area_pincode}}<br>
+                    <strong>India</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="action-bar">
+            <a href='{% url "seller:confirm_shipment" order.id %}'><button type="button" class="btn-ship">Mark as Shipped</button></a>
+            <a href="#" class="text-muted text-decoration-none small fw-bold">Cancel and Return</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

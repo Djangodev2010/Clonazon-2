@@ -220,11 +220,10 @@ def login_view(request):
             if user is not None:
                 auth.login(request, user)
                 if user.is_seller:
-                    return redirect('seller:index')
+                    return redirect('seller:seller_profile')
                 return redirect('/')
             messages.error(request, 'Invalid Creditentials!')
     else:
-
         form = UserLoginForm()
     context = {
         'form': form
